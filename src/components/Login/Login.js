@@ -17,11 +17,6 @@ const Login = (props) => {
   const passwordChangeHandler = (event) => {
     setEnteredPassword(event.target.value);
   };
-  useEffect(() => {
-    setFormIsValid(
-      enteredEmail.includes("@") && enteredPassword.trim().length > 6
-    );
-  }, [setFormIsValid, enteredEmail, enteredPassword]);
 
   const validateEmailHandler = () => {
     setEmailIsValid(enteredEmail.includes("@"));
@@ -35,6 +30,20 @@ const Login = (props) => {
     event.preventDefault();
     props.onLogin(enteredEmail, enteredPassword);
   };
+
+  useEffect(() => {
+    const identifier = setTimeout(() => {
+      console.log("CLEAN");
+      setFormIsValid(
+        enteredEmail.includes("@") && enteredPassword.trim().length > 6
+      );
+    }, 500);
+
+    return () => {
+      console.log("CLEANUP FUNCTION");
+      clearTimeout(identifier);
+    };
+  }, [enteredEmail, enteredPassword]);
 
   return (
     <Card className={classes.login}>
