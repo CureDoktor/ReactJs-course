@@ -1,7 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 import Card from "../UI/Card/Card";
 import classes from "./Login.module.css";
 import Button from "../UI/Button/Button";
+
+const emailReducer = (state, action) => {
+  return { value: "", isValid: false };
+};
 
 const Login = (props) => {
   const [enteredEmail, setEnteredEmail] = useState("");
@@ -9,13 +13,32 @@ const Login = (props) => {
   const [enteredPassword, setEnteredPassword] = useState("");
   const [passwordIsValid, setPasswordIsValid] = useState();
   const [formIsValid, setFormIsValid] = useState(false);
+  const [emailState, dispatchEmail] = useReducer();
+
+  // useEffect(() => {
+  //   const identifier = setTimeout(() => {
+  //     console.log("Checking form validity!");
+  //     setFormIsValid(
+  //       enteredEmail.includes("@") && enteredPassword.trim().length > 6
+  //     );
+  //   }, 500);
+
+  //   return () => {
+  //     console.log("CLEANUP FUNCTION");
+  //     clearTimeout(identifier);
+  //   };
+  // }, [enteredEmail, enteredPassword]);
 
   const emailChangeHandler = (event) => {
     setEnteredEmail(event.target.value);
+    setFormIsValid(
+      event.target.value.includes("@") && enteredPassword.trim() > 6
+    );
   };
 
   const passwordChangeHandler = (event) => {
     setEnteredPassword(event.target.value);
+    setFormIsValid(event.target.value.trim() > 6 && enteredEmail.includes("@"));
   };
 
   const validateEmailHandler = () => {
@@ -32,18 +55,11 @@ const Login = (props) => {
   };
 
   useEffect(() => {
-    const identifier = setTimeout(() => {
-      console.log("CLEAN");
-      setFormIsValid(
-        enteredEmail.includes("@") && enteredPassword.trim().length > 6
-      );
-    }, 500);
-
+    console.log("Cuhreee");
     return () => {
-      console.log("CLEANUP FUNCTION");
-      clearTimeout(identifier);
+      console.log("Effect cleanup");
     };
-  }, [enteredEmail, enteredPassword]);
+  }, [enteredPassword]);
 
   return (
     <Card className={classes.login}>
